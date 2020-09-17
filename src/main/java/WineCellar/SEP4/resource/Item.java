@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name="item")
+@Table(name="Item")
 public class Item {
 
     @Id
@@ -51,6 +51,9 @@ public class Item {
 
     public int getId() {
         return id;
+    }
+    public void setId(int id) {
+        this.id=id;
     }
 
     public String getName() {
