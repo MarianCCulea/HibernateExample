@@ -1,21 +1,17 @@
 package WineCellar.SEP4.resource;
 
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Table(name="Item")
+@Table(name="item")
 public class Item {
 
     @Id
     @GeneratedValue
-    private int id;
+    private int item_id;
     private String name;
     private String category;
     private float price;
@@ -24,6 +20,9 @@ public class Item {
     private int quantity;
     private String quantitytype;
     private int nrofitems;
+
+    @ManyToMany(mappedBy = "items")
+    private Set<Order> orders = new HashSet<>();
 
     public Item(){}
     public Item( String name, String category, Float price, String description, String url,int quantity,String quantitytype,int nrofitems) {
@@ -37,8 +36,8 @@ public class Item {
         this.nrofitems = nrofitems;
     }
 
-    public Item(int id, String name, String category, Float price, String description, String url,int quantity,String quantitytype,int nrofitems) {
-        this.id=id;
+    public Item(int item_id, String name, String category, Float price, String description, String url, int quantity, String quantitytype, int nrofitems) {
+        this.item_id = item_id;
         this.name = name;
         this.category = category;
         this.price = price;
@@ -49,11 +48,11 @@ public class Item {
         this.nrofitems = nrofitems;
     }
 
-    public int getId() {
-        return id;
+    public int getItem_id() {
+        return item_id;
     }
-    public void setId(int id) {
-        this.id=id;
+    public void setItem_id(int id) {
+        this.item_id =id;
     }
 
     public String getName() {

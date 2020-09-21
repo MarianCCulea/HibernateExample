@@ -1,8 +1,8 @@
 package WineCellar.SEP4.api;
 
-import WineCellar.SEP4.database.ItemService;
 import WineCellar.SEP4.database.Database;
 import WineCellar.SEP4.resource.Item;
+import WineCellar.SEP4.resource.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,25 +15,33 @@ import java.util.List;
 public class ItemController {
     Database database=Database.getInstance();
 
-    @Autowired
-    private ItemService service;
-
     @GetMapping("/items")
     @ResponseBody
     public List<Item> getAllItems() {
             return database.getAllItems();
     }
-
-    @GetMapping("/itemz")
+    @GetMapping("/categories")
     @ResponseBody
-    public String getIt() {
-        service.addItem(new Item("Firstname","pill",(float)21,"asd","urll.com",12,"mg",21));
-        return "tests";
+    public List<String> getAllCateg() {
+        return database.getAllCategories();
     }
 
-    @GetMapping("/itemz2")
+    @GetMapping("/orders")
     @ResponseBody
-    public List<Item> getItems() {
-        return service.getAllItems();
+    public List<Order> getAllOrders() {
+        Order o= new Order();
+        o.setAdress("Strada I.C.Bratianu");
+        o.setInvoiceadress("Strada I.C.Bratianu");
+        o.setDelivered(false);
+        o.setPhone(072);
+        o.setUserid(1);
+        o.setTotalprice(55);
+        o.setTotalitems(12);
+        for (int i=0;i<12;i++){
+        o.getItems().add(getAllItems().get(i));
+        }
+        database.addOrder(o);
+        return database.getOrderItems(1);
     }
+
 }
