@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 public class ItemController {
@@ -26,9 +27,11 @@ public class ItemController {
         return database.getAllCategories();
     }
 
+
+
     @GetMapping("/orders")
     @ResponseBody
-    public List<Order> getAllOrders() {
+    public Set<Item> getAllOrders() {
         Order o= new Order();
         o.setAdress("Strada I.C.Bratianu");
         o.setInvoiceadress("Strada I.C.Bratianu");
@@ -41,6 +44,7 @@ public class ItemController {
         o.getItems().add(getAllItems().get(i));
         }
         database.addOrder(o);
+        //Retrun order items pentru a testa daca Select From Orders functioneaza
         return database.getOrderItems(1);
     }
 

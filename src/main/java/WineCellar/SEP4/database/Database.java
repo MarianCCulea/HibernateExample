@@ -11,6 +11,7 @@ import org.hibernate.cfg.Configuration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 public class Database {
     private static SessionFactory factory;
@@ -110,18 +111,18 @@ public class Database {
         return orders;
     }
 
-    public List<Order> getOrderItems(int order_id)
+    public Set<Item> getOrderItems(int order_id)
     {
         Session session=factory.openSession();
         Transaction tx = null;
         List orders=new ArrayList();
-        List items=new ArrayList();
+        Order or=null;
+
         try {
             tx= session.beginTransaction();
             orders = session.createQuery("from Order where Order.order_id=:order_id").setParameter("order_id",order_id).list();
             for (Iterator iterator = orders.iterator(); iterator.hasNext();){
-                Order order = (Order) iterator.next();
-
+                or = (Order) iterator.next();
             }
             tx.commit();
         } catch (HibernateException e) {
@@ -130,7 +131,7 @@ public class Database {
         } finally {
             session.close();
         }
-        return orders;
+        return or.getItems();
     }
 
 
