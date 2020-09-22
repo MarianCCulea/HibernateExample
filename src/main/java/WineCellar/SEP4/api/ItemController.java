@@ -5,6 +5,7 @@ import WineCellar.SEP4.resource.Item;
 import WineCellar.SEP4.resource.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,6 +47,11 @@ public class ItemController {
         database.addOrder(o);
         //Retrun order items pentru a testa daca Select From Orders functioneaza
         return database.getOrderItems(1);
+    }
+
+    @GetMapping("/orders/{id}")
+    public Order getOrderById(@PathVariable int id) {
+        return database.getOrder(id);
     }
 
 }

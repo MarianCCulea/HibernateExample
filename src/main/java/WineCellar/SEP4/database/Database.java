@@ -134,6 +134,35 @@ public class Database {
         return or.getItems();
     }
 
+    public Order getOrder(int order_id)
+    {
+        Session session=factory.openSession();
+        Transaction tx = null;
+        List orders=new ArrayList();
+        List items=new ArrayList();
+        Order or=null;
+
+        try {
+            tx= session.beginTransaction();
+            orders = session.createQuery("from Order where Order.order_id=:order_id").setParameter("order_id",order_id).list();
+            or=(Order)orders.get(0);
+            items=session.createQuery("select i.item_id,i.name,i.category,i.price,i.description,i.url,i.quantity,i.quantitytype,i.nrofitems \n" +
+                    "from OrderhasItems join Item i on OrderhasItems.item_id=i.item_id where OrderhasItems.order_id=:order_id").setParameter("order_id",order_id).list();
+            for (Iterator iterator = items.iterator(); iterator.hasNext();){
+                or.getItems().add( (Item) iterator.next());
+            }
+
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+        return or;
+    }
+
+
 
     public void addOrder(Order o) {
         Session session=factory.openSession();

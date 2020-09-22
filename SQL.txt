@@ -6,7 +6,7 @@ CREATE TABLE orders
   TotalPrice Float NOT NULL,
   Totalitems Float NOT NULL,
   phone int NOT NULL,
-  delivered boolean default false
+  delivered bit default 0
   );
   
 
