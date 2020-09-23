@@ -4,6 +4,7 @@ package WineCellar.SEP4.resource;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -11,10 +12,9 @@ import java.util.Set;
 public class Order {
 
     @Id
-    @GeneratedValue
-    @Column(name = "order_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id", unique = true, nullable = false)
     private int order_id;
-    private int userid;
     private String adress;
     private String invoiceadress;
     private float totalprice;
@@ -22,19 +22,18 @@ public class Order {
     private int phone;
     private boolean delivered;
 
-    @ManyToMany(cascade = { CascadeType.ALL })
+    @OneToMany(cascade=CascadeType.ALL)
     @JoinTable(
             name = "OrderhasItems",
-            joinColumns = { @JoinColumn(name = "order_id") },
-            inverseJoinColumns = { @JoinColumn(name = "item_id") }
+            joinColumns = { @JoinColumn(name = "order_id",referencedColumnName = "order_id") },
+            inverseJoinColumns = { @JoinColumn(name = "item_id", referencedColumnName="item_id") }
     )
-    Set<Item> items = new HashSet<Item>();
+    List<Item> items= new ArrayList<>();
 
     public Order(){}
 
-    public Order(int order_id, int userid, String adress, String invoiceadress, Float totalprice, int totalitems, int phone, boolean delivered) {
+    public Order(int order_id, String adress, String invoiceadress, Float totalprice, int totalitems, int phone, boolean delivered) {
         this.order_id = order_id;
-        this.userid = userid;
         this.adress = adress;
         this.invoiceadress = invoiceadress;
         this.totalprice = totalprice;
@@ -43,11 +42,11 @@ public class Order {
         this.delivered=delivered;
     }
 
-    public Set<Item> getItems() {
+    public List<Item> getItems() {
         return items;
     }
 
-    public void setItems(Set<Item> items) {
+    public void setItems(List<Item> items) {
         this.items = items;
     }
 
@@ -57,14 +56,6 @@ public class Order {
 
     public void setOrder_id(int id) {
         this.order_id = id;
-    }
-
-    public int getUserid() {
-        return userid;
-    }
-
-    public void setUserid(int userid) {
-        this.userid = userid;
     }
 
     public String getAdress() {

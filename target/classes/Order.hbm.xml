@@ -4,17 +4,16 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "WineCellar.SEP4.resource.Order" table = "order">
+    <class name = "WineCellar.SEP4.resource.Order" table = "orders">
 
         <meta attribute = "class-description">
             This class contains the order detail.
         </meta>
 
-        <id name = "order_id" type = "int" column = "item_id">
+        <id name = "order_id" type = "int" column = "order_id">
             <generator class="native"/>
         </id>
 
-        <property name = "userid" column = "userid" type = "int"/>
         <property name = "adress" column = "adress" type = "string"/>
         <property name = "invoiceadress" column = "invoiceadress" type = "string"/>
         <property name = "totalprice" column = "totalprice" type = "float"/>

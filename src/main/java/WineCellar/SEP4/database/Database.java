@@ -111,7 +111,7 @@ public class Database {
         return orders;
     }
 
-    public Set<Item> getOrderItems(int order_id)
+    public List<Item> getOrderItems(int order_id)
     {
         Session session=factory.openSession();
         Transaction tx = null;
@@ -177,5 +177,31 @@ public class Database {
         } finally {
             session.close();
         }
+    }
+
+    public void addDummyOrder() {
+        Order o= new Order();
+        o.setAdress("Strada Militara");
+        o.setInvoiceadress("Strada Militara");
+        o.setDelivered(false);
+        o.setPhone(1221);
+        o.setTotalprice(55);
+        o.setTotalitems(12);
+            o.setItems(getAllItems());
+
+
+        Session session=factory.openSession();
+        Transaction tx = null;
+        try {
+            tx= session.beginTransaction();
+            session.save(o);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+
     }
 }

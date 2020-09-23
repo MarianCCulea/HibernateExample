@@ -29,29 +29,17 @@ public class ItemController {
     }
 
 
-
-    @GetMapping("/orders")
+    @GetMapping("/or")
     @ResponseBody
-    public Set<Item> getAllOrders() {
-        Order o= new Order();
-        o.setAdress("Strada I.C.Bratianu");
-        o.setInvoiceadress("Strada I.C.Bratianu");
-        o.setDelivered(false);
-        o.setPhone(072);
-        o.setUserid(1);
-        o.setTotalprice(55);
-        o.setTotalitems(12);
-        for (int i=0;i<12;i++){
-        o.getItems().add(getAllItems().get(i));
-        }
-        database.addOrder(o);
-        //Retrun order items pentru a testa daca Select From Orders functioneaza
-        return database.getOrderItems(1);
+    public String addOrder() {
+        database.addDummyOrder();
+        return "Done";
     }
 
     @GetMapping("/orders/{id}")
+    @ResponseBody
     public Order getOrderById(@PathVariable int id) {
+        System.out.println("VARIABILA---"+id);
         return database.getOrder(id);
     }
-
 }

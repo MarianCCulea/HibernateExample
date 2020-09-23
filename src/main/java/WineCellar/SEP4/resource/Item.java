@@ -10,7 +10,8 @@ import java.util.Set;
 public class Item {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "item_id", unique = true, nullable = false)
     private int item_id;
     private String name;
     private String category;
@@ -20,9 +21,6 @@ public class Item {
     private int quantity;
     private String quantitytype;
     private int nrofitems;
-
-    @ManyToMany(mappedBy = "items")
-    private Set<Order> orders = new HashSet<>();
 
     public Item(){}
     public Item( String name, String category, Float price, String description, String url,int quantity,String quantitytype,int nrofitems) {
