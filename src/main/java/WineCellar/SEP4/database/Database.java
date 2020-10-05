@@ -1,7 +1,7 @@
 package WineCellar.SEP4.database;
 
 import WineCellar.SEP4.resource.Item;
-import WineCellar.SEP4.resource.Order;
+import WineCellar.SEP4.resource.Orders;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -19,7 +19,14 @@ public class Database {
 
     public Database() {
         try {
-            factory = new Configuration().configure().buildSessionFactory();
+
+
+            Configuration configuration = new Configuration();
+            configuration.addAnnotatedClass(Item.class);
+            configuration.addAnnotatedClass(Orders.class);
+
+
+           factory = configuration.configure().buildSessionFactory();
         } catch (Throwable ex) {
             System.err.println("Failed to create sessionFactory object." + ex);
             throw new ExceptionInInitializerError(ex);
@@ -44,11 +51,6 @@ public class Database {
             items = session.createQuery("FROM Item").list();
             for (Iterator iterator = items.iterator(); iterator.hasNext();){
                 Item item = (Item) iterator.next();
-                System.out.print("Name: " + item.getName());
-                System.out.print("      ");
-                System.out.print("Category" + item.getCategory());
-                System.out.print("      ");
-                System.out.println("Price: " + item.getPrice());
             }
             tx.commit();
         } catch (HibernateException e) {
@@ -65,14 +67,14 @@ public class Database {
         Session session=factory.openSession();
         Transaction tx = null;
         List items=new ArrayList();
+        List<String> categories=new ArrayList<>();
         try {
             tx= session.beginTransaction();
 
-            items = session.createQuery("SELECT category FROM Item").list();
+            items = session.createQuery("SELECT i.category FROM Item i").list();
             for (Iterator iterator = items.iterator(); iterator.hasNext();){
-                String item = (String) iterator.next();
-                System.out.print(item);
-                System.out.print("      ");
+                String categ = (String) iterator.next();
+                categories.add(categ);
             }
             tx.commit();
         } catch (HibernateException e) {
@@ -81,25 +83,21 @@ public class Database {
         } finally {
             session.close();
         }
-        return items;
+        return categories;
     }
 
 
-    public List<Item> getAllOrders(){
+    public List<Orders> getAllOrders(){
         Session session=factory.openSession();
         Transaction tx = null;
-        List orders=new ArrayList();
+        List querylist;
+        List<Orders> orders=new ArrayList<>();
         try {
             tx= session.beginTransaction();
-
-            orders = session.createQuery("FROM Order").list();
-            for (Iterator iterator = orders.iterator(); iterator.hasNext();){
-                Order order = (Order) iterator.next();
-                System.out.print("Adress: " + order.getAdress());
-                System.out.print("      ");
-                System.out.print("Invoice Adress" + order.getInvoiceadress());
-                System.out.print("      ");
-                System.out.println("Total price: " + order.getTotalprice());
+            querylist = session.createQuery("FROM Orders").list();
+            for (Iterator iterator = querylist.iterator(); iterator.hasNext();){
+                Orders order = (Orders) iterator.next();
+                orders.add(order);
             }
             tx.commit();
         } catch (HibernateException e) {
@@ -111,43 +109,44 @@ public class Database {
         return orders;
     }
 
-    public List<Item> getOrderItems(int order_id)
+    public Set<Item> getOrderItems(int order_id)
     {
         Session session=factory.openSession();
         Transaction tx = null;
         List orders=new ArrayList();
-        Order or=null;
+        Orders or=null;
 
         try {
             tx= session.beginTransaction();
-            orders = session.createQuery("from Order where Order.order_id=:order_id").setParameter("order_id",order_id).list();
+            orders = session.createQuery("from Orders where Orders.order_id=:order_id").setParameter("order_id",order_id).list();
             for (Iterator iterator = orders.iterator(); iterator.hasNext();){
-                or = (Order) iterator.next();
+                or = (Orders) iterator.next();
             }
             tx.commit();
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
-            e.printStackTrace();
+            //e.printStackTrace(); Log in loc de print
         } finally {
             session.close();
         }
         return or.getItems();
     }
 
-    public Order getOrder(int order_id)
+    public Orders getOrderById(int order_id)
     {
         Session session=factory.openSession();
         Transaction tx = null;
-        List orders=new ArrayList();
+        List orders;
         List items=new ArrayList();
-        Order or=null;
+        Orders or=null;
 
         try {
             tx= session.beginTransaction();
-            orders = session.createQuery("from Order where Order.order_id=:order_id").setParameter("order_id",order_id).list();
-            or=(Order)orders.get(0);
+            orders = session.createQuery("from Orders o where o.order_id=:order_id").setParameter("order_id",order_id).list();
+            or=(Orders)orders.get(0);
+
             items=session.createQuery("select i.item_id,i.name,i.category,i.price,i.description,i.url,i.quantity,i.quantitytype,i.nrofitems \n" +
-                    "from OrderhasItems join Item i on OrderhasItems.item_id=i.item_id where OrderhasItems.order_id=:order_id").setParameter("order_id",order_id).list();
+                    "from orderhasitems oi join Item i on oi.item_id=i.item_id where oi.order_id=:order_id").setParameter("order_id",order_id).list();
             for (Iterator iterator = items.iterator(); iterator.hasNext();){
                 or.getItems().add( (Item) iterator.next());
             }
@@ -163,45 +162,56 @@ public class Database {
     }
 
 
-
-    public void addOrder(Order o) {
+    public String addOrder(Orders orders) {
         Session session=factory.openSession();
         Transaction tx = null;
         try {
             tx= session.beginTransaction();
-            session.save(o);
+            session.persist(orders);
             tx.commit();
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
-            e.printStackTrace();
+            e.printStackTrace();//log
+            return "Something went Wrong";
         } finally {
             session.close();
+            return "Done";
         }
     }
 
-    public void addDummyOrder() {
-        Order o= new Order();
-        o.setAdress("Strada Militara");
-        o.setInvoiceadress("Strada Militara");
-        o.setDelivered(false);
-        o.setPhone(1221);
-        o.setTotalprice(55);
-        o.setTotalitems(12);
-            o.setItems(getAllItems());
-
-
+    public String updateOrder(Orders orders) {
         Session session=factory.openSession();
         Transaction tx = null;
         try {
             tx= session.beginTransaction();
-            session.save(o);
+            session.update(orders);
             tx.commit();
         } catch (HibernateException e) {
             if (tx!=null) tx.rollback();
+            //log
             e.printStackTrace();
+            return "Something went Wrong";
         } finally {
             session.close();
+            return "Done";
         }
+    }
 
+    public String deleteOrder(Orders orders) {
+        Session session=factory.openSession();
+        Transaction tx = null;
+        try {
+            tx= session.beginTransaction();
+            session.delete(orders);
+            tx.commit();
+        } catch (HibernateException e) {
+            if (tx!=null) tx.rollback();
+            //log
+            e.printStackTrace();
+            return "Something went Wrong";
+        } finally {
+            session.close();
+            return "Done";
+        }
     }
 }

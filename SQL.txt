@@ -23,11 +23,10 @@ CREATE TABLE item(
   );
 
 
-CREATE TABLE OrderhasItems(
+CREATE TABLE orderhasitems(
   order_id   int,
   item_id  int,
-  item_count int,
  PRIMARY KEY (order_id, item_id)
-, FOREIGN KEY (item_id) REFERENCES item(id) 
-, FOREIGN KEY (order_id) REFERENCES orders(id) ON DELETE CASCADE
+, FOREIGN KEY (item_id) REFERENCES item(item_id) 
+, FOREIGN KEY (order_id) REFERENCES orders(order_id) ON DELETE CASCADE
 );

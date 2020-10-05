@@ -4,10 +4,10 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name = "WineCellar.SEP4.resource.Order" table = "orders">
+    <class name = "WineCellar.SEP4.resource.Orders" table = "orders">
 
         <meta attribute = "class-description">
-            This class contains the order detail.
+            This class contains the orders detail.
         </meta>
 
         <id name = "order_id" type = "int" column = "order_id">

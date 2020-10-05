@@ -2,38 +2,43 @@ package WineCellar.SEP4.resource;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 @Entity
-@Table(name="orders")
-public class Order {
+@Table(name="Orders")
+public class Orders implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id", unique = true, nullable = false)
     private int order_id;
+    @Column(name = "adress")
     private String adress;
+    @Column(name = "invoiceadress")
     private String invoiceadress;
+    @Column(name = "totalprice")
     private float totalprice;
+    @Column(name = "totalitems")
     private int totalitems;
+    @Column(name = "phone")
     private int phone;
+    @Column(name = "delivered")
     private boolean delivered;
-
-    @OneToMany(cascade=CascadeType.ALL)
+    @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "OrderhasItems",
-            joinColumns = { @JoinColumn(name = "order_id",referencedColumnName = "order_id") },
-            inverseJoinColumns = { @JoinColumn(name = "item_id", referencedColumnName="item_id") }
+            name = "orderhasitems",
+            joinColumns = { @JoinColumn(name = "order_id") },
+            inverseJoinColumns = { @JoinColumn(name = "item_id") }
     )
-    List<Item> items= new ArrayList<>();
+    Set<Item> items= new HashSet<Item>();
 
-    public Order(){}
+    public Orders(){}
 
-    public Order(int order_id, String adress, String invoiceadress, Float totalprice, int totalitems, int phone, boolean delivered) {
-        this.order_id = order_id;
+    public Orders(String adress, String invoiceadress, Float totalprice, int totalitems, int phone, boolean delivered) {
         this.adress = adress;
         this.invoiceadress = invoiceadress;
         this.totalprice = totalprice;
@@ -42,11 +47,21 @@ public class Order {
         this.delivered=delivered;
     }
 
-    public List<Item> getItems() {
+    public Orders(String adress, String invoiceadress, float totalprice, int totalitems, int phone, boolean delivered, Set<Item> items) {
+        this.adress = adress;
+        this.invoiceadress = invoiceadress;
+        this.totalprice = totalprice;
+        this.totalitems = totalitems;
+        this.phone = phone;
+        this.delivered = delivered;
+        this.items = items;
+    }
+
+    public Set<Item> getItems() {
         return items;
     }
 
-    public void setItems(List<Item> items) {
+    public void setItems(Set<Item> items) {
         this.items = items;
     }
 

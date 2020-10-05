@@ -2,25 +2,37 @@ package WineCellar.SEP4.resource;
 
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
 @Table(name="item")
-public class Item {
+public class Item implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id", unique = true, nullable = false)
     private int item_id;
+    @Column(name = "name")
     private String name;
+    @Column(name = "category")
     private String category;
+    @Column(name = "price")
     private float price;
+    @Column(name = "description")
     private String description;
+    @Column(name = "url")
     private String url;
+    @Column(name = "quantity")
     private int quantity;
+    @Column(name = "quantitytype")
     private String quantitytype;
+    @Column(name = "nrofitems")
     private int nrofitems;
+
+    @ManyToMany(mappedBy = "items")
+    private Set<Orders> orders = new HashSet<Orders>();
 
     public Item(){}
     public Item( String name, String category, Float price, String description, String url,int quantity,String quantitytype,int nrofitems) {
@@ -44,6 +56,14 @@ public class Item {
         this.quantity=quantity;
         this.quantitytype=quantitytype;
         this.nrofitems = nrofitems;
+    }
+
+    public Set<Orders> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(Set<Orders> orders) {
+        this.orders = orders;
     }
 
     public int getItem_id() {
