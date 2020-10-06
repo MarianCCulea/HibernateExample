@@ -30,7 +30,7 @@ public class Orders implements Serializable {
     private boolean delivered;
     @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
-            name = "orderhasitems",
+            name = "Orders_Item",
             joinColumns = { @JoinColumn(name = "order_id") },
             inverseJoinColumns = { @JoinColumn(name = "item_id") }
     )

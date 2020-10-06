@@ -2,6 +2,7 @@ package WineCellar.SEP4.database;
 
 import WineCellar.SEP4.resource.Item;
 import WineCellar.SEP4.resource.Orders;
+import WineCellar.SEP4.resource.Orders_Item;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -24,6 +25,7 @@ public class Database {
             Configuration configuration = new Configuration();
             configuration.addAnnotatedClass(Item.class);
             configuration.addAnnotatedClass(Orders.class);
+            configuration.addAnnotatedClass(Orders_Item.class);
 
 
            factory = configuration.configure().buildSessionFactory();
