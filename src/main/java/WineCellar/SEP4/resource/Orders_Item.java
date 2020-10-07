@@ -1,11 +1,9 @@
 package WineCellar.SEP4.resource;
-
-
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name="orders_item")
+@Table(name = "orders_item")
 public class Orders_Item implements Serializable {
 
     @Id

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 public class OrderController {
-    Database database=Database.getInstance();
+    Database database = Database.getInstance();
 
     @GetMapping("/order")
     @ResponseBody
@@ -38,15 +38,7 @@ public class OrderController {
     @GetMapping("/order/{id}")
     @ResponseBody
     public Orders getOrderById(@PathVariable int id) {
-        /*
-        folosit pt JSON
-        Order or=new Order("Adress","invoice",(float)20,2,232,false);
-        Set<Item> items =new HashSet<>(database.getAllItems());
-        or.setItems(items);
-        return or;
-        */
-
-       return database.getOrderById(id);
+        return database.getOrderById(id);
     }
 
 

@@ -10,13 +10,14 @@ import java.util.List;
 
 @RestController
 public class ItemController {
-    Database database=Database.getInstance();
+    Database database = Database.getInstance();
 
     @GetMapping("/items")
     @ResponseBody
     public List<Item> getAllItems() {
-            return database.getAllItems();
+        return database.getAllItems();
     }
+
     @GetMapping("/categories")
     @ResponseBody
     public List<String> getAllCateg() {

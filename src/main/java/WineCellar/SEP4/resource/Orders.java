@@ -29,11 +29,6 @@ public class Orders implements Serializable {
     @Column(name = "delivered")
     private boolean delivered;
     @ManyToMany(cascade = { CascadeType.ALL })
-    @JoinTable(
-            name = "Orders_Item",
-            joinColumns = { @JoinColumn(name = "order_id") },
-            inverseJoinColumns = { @JoinColumn(name = "item_id") }
-    )
     Set<Item> items= new HashSet<Item>();
 
     public Orders(){}

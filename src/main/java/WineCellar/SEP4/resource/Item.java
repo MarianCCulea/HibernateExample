@@ -7,7 +7,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name="item")
+@Table(name = "item")
 public class Item implements Serializable {
 
     @Id
@@ -34,15 +34,17 @@ public class Item implements Serializable {
     @ManyToMany(mappedBy = "items")
     private Set<Orders> orders = new HashSet<Orders>();
 
-    public Item(){}
-    public Item( String name, String category, Float price, String description, String url,int quantity,String quantitytype,int nrofitems) {
+    public Item() {
+    }
+
+    public Item(String name, String category, Float price, String description, String url, int quantity, String quantitytype, int nrofitems) {
         this.name = name;
         this.category = category;
         this.price = price;
         this.description = description;
-        this.url=url;
-        this.quantity=quantity;
-        this.quantitytype=quantitytype;
+        this.url = url;
+        this.quantity = quantity;
+        this.quantitytype = quantitytype;
         this.nrofitems = nrofitems;
     }
 
@@ -52,9 +54,9 @@ public class Item implements Serializable {
         this.category = category;
         this.price = price;
         this.description = description;
-        this.url=url;
-        this.quantity=quantity;
-        this.quantitytype=quantitytype;
+        this.url = url;
+        this.quantity = quantity;
+        this.quantitytype = quantitytype;
         this.nrofitems = nrofitems;
     }
 
@@ -69,8 +71,9 @@ public class Item implements Serializable {
     public int getItem_id() {
         return item_id;
     }
+
     public void setItem_id(int id) {
-        this.item_id =id;
+        this.item_id = id;
     }
 
     public String getName() {
